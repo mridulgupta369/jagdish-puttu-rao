@@ -84,8 +84,8 @@ window.STORY = {
     wedding: {
       kicker: 'Milestone · 28 January 1993',
       year: '1993',
-      title: 'Jagdish & Pushparatna',
-      body: 'On 28 January 1993 he married Pushparatna Priyadarshini of Byndoor. She worked with the State Bank of Mysore and was posted at Huvina Hadagali, the town famous for its jasmine, so their first two years were long-distance. Then she got a transfer to Nariman Point, and by 1995–96 Bombay was home for them both.',
+      title: 'Jagdish & Pushpa',
+      body: 'On 28 January 1993 he married Pushparatna Priyadarshini of Byndoor, called Pushpa at home. She worked with the State Bank of Mysore and was posted at Huvina Hadagali, the town famous for its jasmine, so their first two years were long-distance. Then she got a transfer to Nariman Point, and by 1995–96 Bombay was home for them both.',
       note: 'Two years apart, then a life together',
       photo: null,
       placeholder: 'Wedding photo',
@@ -96,7 +96,7 @@ window.STORY = {
       kicker: 'Milestone · 2006',
       year: '2006',
       title: 'Together in Dubai',
-      body: 'After three years of long distance, Pushparatna and Pranjali moved to Dubai in 2006. They had visited him the year before; this time they came to stay. The family was under one roof again.',
+      body: 'After three years of long distance, Pushpa and Pranjali moved to Dubai in 2006. They had visited him the year before; this time they came to stay. The family was under one roof again.',
       note: 'Under one roof again',
       photo: null,
       placeholder: 'Family photo in Dubai',
@@ -157,7 +157,7 @@ window.STORY = {
     kelloggs: { year: '', text: 'Kellogg’s' },
     pranjali: { year: '', text: 'A daughter: Pranjali' },
     nerul: { year: '1998', text: 'First home and first car, in Nerul' },
-    trolley: { year: '2003–06', text: 'From Dubai he brought Pranjali a maroon trolley bag with a camouflage design. She didn’t like it then, and wishes now she had used it more.' },
+    trolley: { year: '2003–06', text: 'From Dubai he brought Pranjali a maroon trolley bag with a camouflage design. She didn’t use it much at first, and now wishes she had.' },
     odisha: { year: '2019', text: 'A trip to Odisha to see Pranjali at work' },
     dharamshala: { year: '2022', text: 'Dharamshala and Amritsar, visiting Pranjali' }
   },
@@ -170,7 +170,7 @@ window.STORY = {
   luggage: { kicker: 'Passenger', name: 'J. P. Rao', extra: 'B.Com, First Class', from: 'Peradi', to: 'Bombay', note: 'One way' },
   apart: {
     a: { place: 'Bombay', who: 'Jagdish' },
-    b: { place: 'Huvina Hadagali', who: 'Pushparatna' },
+    b: { place: 'Huvina Hadagali', who: 'Pushpa' },
     during: 'Two years, two cities',
     after: 'Then a transfer to Nariman Point'
   },

@@ -329,13 +329,14 @@
   /* ------------------------------------------------------------------ *
    *  People                                                             *
    * ------------------------------------------------------------------ */
-  const SKIN = { jp: '#8b5a3c', jpOld: '#86573a', pr: '#9a6747', prOld: '#946345', kid: '#94603f' };
+  /* Jagdish: a lighter, wheatish tone at every age (family feedback, 2026-10-02) */
+  const SKIN = { jp: '#b5835a', jpOld: '#b07e56', jpChild: '#b07b53', pr: '#9a6747', prOld: '#946345', kid: '#94603f' };
   const shirt = (c) => ({ kind: 'shirt', color: c });
   const trousers = (c) => ({ kind: 'trousers', color: c });
   const JP_YOUNG = { type: 'man', skin: SKIN.jp, hair: 'short', top: shirt('#dfe7f0'), bottom: trousers('#4a4a5a') };
   const WIFE = { type: 'woman', skin: SKIN.pr, hair: 'braid', jasmine: true, bindi: true, top: { kind: 'blouse', color: '#8f1d2c' }, bottom: { kind: 'saree', color: '#b3263a', border: '#e0b04a' } };
   const PEOPLE = {
-    jpChild: { px: -60, gy: 58, enter: -110, fig: { type: 'child', skin: '#8a5536', hair: 'short', top: shirt('#f4efe4'), bottom: { kind: 'shorts', color: '#33507a' }, prop: 'satchel' } },
+    jpChild: { px: -60, gy: 58, enter: -110, fig: { type: 'child', skin: SKIN.jpChild, hair: 'short', top: shirt('#f4efe4'), bottom: { kind: 'shorts', color: '#33507a' }, prop: 'satchel' } },
     jpStudent: { px: -40, gy: 56, enter: -110, fig: Object.assign({}, JP_YOUNG, { prop: 'satchel' }) },
     jpLeave: { px: -40, gy: 56, fig: Object.assign({}, JP_YOUNG, { prop: 'trunk' }) },
     jpYoung: { px: 0, gy: 50, enter: -110, fig: Object.assign({}, JP_YOUNG, { prop: 'trunk' }) },
@@ -1351,18 +1352,45 @@
   const playBtn = $('#playBtn');
   let playing = false, holdUntil = 0, lastNow = 0;
   const held = new Set();
+  /* while the story plays by itself, keep the phone's screen on (tolerate refusal) */
+  let wakeLock = null;
+  function keepAwake(on) {
+    try {
+      if (on && !wakeLock && navigator.wakeLock && document.visibilityState === 'visible') {
+        navigator.wakeLock.request('screen').then((l) => {
+          if (!playing) { l.release().catch(() => null); return; }
+          wakeLock = l;
+          l.addEventListener('release', () => { if (wakeLock === l) wakeLock = null; });
+        }).catch(() => null);
+      } else if (!on && wakeLock) {
+        const l = wakeLock;
+        wakeLock = null;
+        l.release().catch(() => null);
+      }
+    } catch (err) { wakeLock = null; }
+  }
+  document.addEventListener('visibilitychange', () => { if (playing && document.visibilityState === 'visible') keepAwake(true); });
   function setPlaying(on) {
     playing = on;
     playBtn.setAttribute('aria-pressed', String(on));
     $('.lbl', playBtn).textContent = on ? 'Pause' : 'Play';
     playBtn.setAttribute('aria-label', on ? 'Pause the story' : 'Play the story automatically');
+    keepAwake(on);
     if (on) {
       held.clear();
       if (window.scrollY >= st.end - 4) { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); }
     }
   }
   playBtn.addEventListener('click', () => setPlaying(!playing));
-  ['wheel', 'touchstart'].forEach((ev2) => window.addEventListener(ev2, () => { if (playing) setPlaying(false); }, { passive: true }));
+  /* Play stops when the reader takes over: a mouse wheel, a key, or a real swipe.
+     A tap (for example to keep a phone awake) no longer stops it. */
+  window.addEventListener('wheel', () => { if (playing) setPlaying(false); }, { passive: true });
+  let touchY0 = null;
+  window.addEventListener('touchstart', (e) => { touchY0 = e.touches && e.touches[0] ? e.touches[0].clientY : null; }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (!playing || touchY0 == null || !e.touches || !e.touches[0]) return;
+    if (Math.abs(e.touches[0].clientY - touchY0) > 14) setPlaying(false);
+  }, { passive: true });
   window.addEventListener('keydown', (e) => { if (playing && e.target !== playBtn) setPlaying(false); });
 
   /* tap the night sky for a shooting star */
